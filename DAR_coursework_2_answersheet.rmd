@@ -1,0 +1,663 @@
+---
+title: "MSc_CW2_13150880_Sabrina_Hasan.pdf"
+header-includes:
+- \usepackage{multicol}
+- \usepackage{amsmath}
+- \usepackage{placeins}
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+library(ISLR)
+require(tree)
+```
+
+#### 1. Bayesian networks and naïve Bayes classifiers.
+
+a) Given a training dataset including 10 observations and a Bayesian network indicating the relationships between 3 features (i.e. Income, Student and Credit Rate) and the class attribute (i.e. Buy Computer), please create the conditional probability tables by hand.
+
+#### Solution:
+conditional probability tables(CPT) are as follows:
+
+#ask for buy com do we need
+
+CPT for Buy Computer
+
+     Buy Computer  
+          Yes      |   No                    
+|------------------|----------------
+|                  |                   
+|  12/30 = 0.4     |   18/30 = 0.6 
+
+
+
+
+CPT for Income. Income is an independent feature.
+
+     Buy Computer  |          Income
+                     High              Low
+|------------------|----------------|----------------
+|                  |                |   
+|       Yes        | 5/12 = 0.416   | 7/12 = 0.583  
+|------------------|----------------|----------------
+|       No         | 7/18 = 0.388   | 11/18 = 0.611   
+
+
+CPT for Student. Student is an Independent feature.
+
+     Buy Computer  |          Student
+                       True              False
+|------------------|----------------|----------------
+|                  |                |   
+|       Yes        | 6/12 = 0.5    |  6/12 = 0.5  
+|------------------|----------------|----------------
+|       No         | 12/18 = 0.66   | 6/18 = 0.33
+
+
+CPT for Credit Rate. Credit Rate depends on all the three features that is Buy Computer, Income and Student. So all these three are the classifiers to the left
+of the table.                                            
+
+      Buy Computer  |      Student   |   Income     |       Credit Rate
+       Yes     No     True     False     High  Low     Fair        |   Excellent
+|-------------------|----------------|----------------------------------
+|                                    
+|         No        |      False     |      Low     |  2/3 = 0.666 |  1/3 = 0.333
+|------------------ |----------------|--------------|--------------|--------------
+|                                    
+|         No        |      False     |      High    | 1/3 = 0.333  |  2/3 = 0.666
+|-------------------|----------------|--------------|--------------|--------------               
+|                                    
+|         No        |      True      |      Low     |  6/8 = 0.75   |  2/8 = 0.25
+|------------------ |----------------|--------------|---------------|--------------
+|                                    
+|         No        |      True      |      High    | 3/4 = 0.75    |  1/4 = 0.25
+|------------------ |----------------|--------------|---------------|--------------
+|                                    
+|         Yes       |      False     |      Low     |  1/3 = 0.333  |  2/3 = 0.666
+|-------------------|----------------|--------------|---------------|--------------
+|                                    
+|         Yes       |      False     |      High    |  1/3 = 0.333  |  2/3 = 0.666
+|-------------------|----------------|--------------|---------------|--------------
+|                                    
+|         Yes       |      True      |      Low     |  2/4 = 0.5    |  2/4 = 0.5
+|-------------------|----------------|--------------|---------------|--------------
+|                                    
+|         Yes       |      True      |      High    |  1/2 = 0.5    |  1/2 = 0.5
+|-------------------|----------------|--------------|---------------|--------------
+
+
+
+b) Make predictions for 2 testing observations by using a Bayesian network classifier.
+
+#### Solution:
+
+The two testing observation are as follows:
+
+Testing Observations|    Income      |  Student     |Credit Rating  |    Buy Computer
+           
+|-------------------|----------------|------------------------------|----------------
+|                                    
+| Observation 31    |      Low       |    True      |  Excellent    |  No
+|------------------ |----------------|--------------|---------------|----------------
+|                                    
+| Observation 32    |      High      |    True      |  Fair         |  No
+|-------------------|----------------|--------------|---------------|----------------
+
+
+The working of the predictions probability of two testing observations are as follows:
+i)
+For Observation 31: (We get the values of each probability from the conditional probability table in part a)
+
+P(BuyComp = Yes, Income = Low, Student = True, Credit Rating = Excellent) = 
+
+= P(Income = Low | BuyComp = Yes) * P(Student = True | BuyComp = Yes) * P(Credit Rating = Excellent | Income = Low | Student = True, BuyComp = Yes)*P(BuyComp=Yes)
+
+
+= 0.583 * 0.5 * 0.5 * 0.4 = 0.0583
+
+Now when the probability of buy computer is no for Observation 31:
+
+P(BuyComp = No, Income = Low, Student = True, Credit Rating = Excellent) = 
+
+= P(Income = Low | BuyComp = No) * P(Student = True | BuyComp = No) * P(Credit Rating = Excellent | Income = Low | Student = True, BuyComp = No)*P(BuyComp=No)
+
+
+= 0.611 * 0.66 * 0.25 * 0.6 = 0.060489
+
+We can see that for Observation 31 the P(BuyComp = Yes, Income = Low, Student = True, Credit Rating = Excellent) < P(BuyComp = No, Income = Low, Student = True, Credit Rating = Excellent) = 0.0583 < 0.060489. Hence Buy Computer is No.
+
+ii)
+For Observation 32: (We get the values of each probability from the conditional probability table in part a)
+
+P(BuyComp = Yes, Income = High, Student = True, Credit Rating = Fair) = 
+
+= P(Income = High | BuyComp = Yes) * P(Student = True | BuyComp = Yes) * P(Credit Rating =Fair | Income = High | Student = True, BuyComp = Yes)*P(BuyComp=Yes)
+
+
+= 0.416 * 0.5 * 0.5 * 0.4 = 0.0416
+
+Now when the probability of buy computer is no for Observation 32:
+
+P(BuyComp = No, Income = High, Student = True, Credit Rating = Fair) = 
+ 
+= P(Income = High | BuyComp = No) * P(Student = True | BuyComp = No) * P(Credit Rating = Fair | Income = High | Student = True, BuyComp = No)*P(BuyComp=No)
+
+
+= 0.388 * 0.66 * 0.75 * 0.6 = 0.115236
+
+We can see that for Observation 32 the P(BuyComp = Yes, Income = High, Student = True, Credit Rating = Fair) < P(BuyComp = No, Income = High, Student = True, Credit Rating = Fair) = 0.0416 < 0.115236. Hence Buy Computer is No.
+
+ 
+ 
+c) Based on the conditional independence assumption between features, please create the conditional probability tables by hand.
+
+#### Solution:
+The Conditional probability table (CPT) are as follows:
+
+CPT for Buy Computer
+
+     Buy Computer  
+          Yes      |   No                    
+|------------------|----------------
+|                  |                   
+|  12/30 = 0.4     |   18/30 = 0.6 
+
+
+CPT for Income. Income is an independent feature.
+
+     Buy Computer  |          Income
+                     High              Low
+|------------------|----------------|----------------
+|                  |                |   
+|       Yes        | 5/12 = 0.416   | 7/12 = 0.583  
+|------------------|----------------|----------------
+|       No         | 7/18 = 0.388   | 11/18 = 0.611   
+
+
+CPT for Student. Student is an Independent feature.
+
+     Buy Computer  |          Student
+                       True              False
+|------------------|----------------|----------------
+|                  |                |   
+|       Yes        | 6/12 = 0.5    |  6/12 = 0.5  
+|------------------|----------------|----------------
+|       No         | 12/18 = 0.66   | 6/18 = 0.33
+
+CPT for Credit Rate. Credit Rate is an Independent feature.
+
+     Buy Computer  |          Credit Rate
+                       Fair              Excellent
+|------------------|----------------|----------------
+|                  |                |   
+|       Yes        | 5/12 = 0.416   |  7/12 = 0.5833  
+|------------------|----------------|----------------
+|       No         | 12/18 = 0.666  | 6/18 = 0.333
+
+
+d) Make predictions for 2 testing observations by using a naïve Bayes classifier.
+
+#### Solution:
+The two testing observation are as follows:
+
+Testing Observations|    Income      |  Student     |Credit Rating  |    Buy Computer
+           
+|-------------------|----------------|------------------------------|----------------
+|                                    
+| Observation 31    |      Low       |    True      |  Excellent    |  No
+|------------------ |----------------|--------------|---------------|----------------
+|                                    
+| Observation 32    |      High      |    True      |  Fair         |  No
+|-------------------|----------------|--------------|---------------|----------------
+
+
+The working of the predictions probability of two testing observations are as follows:
+i)
+For Observation 31: (We get the values of each probability from the conditional probability table in part c)
+
+P(BuyComp = Yes, Income = Low, Student = True, Credit Rating = Excellent) = 
+
+= P(Income = Low | BuyComp = Yes) * P(Student = True | BuyComp = Yes) * P(Credit Rating = Excellent | BuyComp = Yes) * P(BuyComp=Yes)
+
+
+= 0.583 * 0.5 * 0.5833 * 0.4 = 0.0680
+
+Now when the probability of buy computer is no for Observation 31:
+
+P(BuyComp = No, Income = Low, Student = True, Credit Rating = Excellent) = 
+
+= P(Income = Low | BuyComp = No) * P(Student = True | BuyComp = No) * P(Credit Rating = Excellent | BuyComp = No)*P(BuyComp=No)
+
+
+= 0.611 * 0.66 * 0.333 * 0.6 = 0.08057
+
+We can see that for Observation 31 the P(BuyComp = Yes, Income = Low, Student = True, Credit Rating = Excellent) < P(BuyComp = No, Income = Low, Student = True, Credit Rating = Excellent) = 0.0680 < 0.08057. Hence Buy Computer is No.
+
+ii)
+For Observation 32: (We get the values of each probability from the conditional probability table in part a)
+
+P(BuyComp = Yes, Income = High, Student = True, Credit Rating = Fair) = 
+
+= P(Income = High | BuyComp = Yes) * P(Student = True | BuyComp = Yes) * P(Credit Rating =Fair | BuyComp = Yes)*P(BuyComp=Yes)
+
+
+= 0.416 * 0.5 * 0.416 * 0.4 = 0.0346112
+
+Now when the probability of buy computer is no for Observation 32:
+
+P(BuyComp = No, Income = High, Student = True, Credit Rating = Fair) = 
+ 
+= P(Income = High | BuyComp = No) * P(Student = True | BuyComp = No) * P(Credit Rating = Fair | BuyComp = No)*P(BuyComp=No)
+
+
+= 0.388 * 0.66 * 0.66 * 0.6 = 0.1014
+
+We can see that for Observation 32 the P(BuyComp = Yes, Income = High, Student = True, Credit Rating = Fair) < P(BuyComp = No, Income = High, Student = True, Credit Rating = Fair) = 0.0346112 < 0.1014. Hence Buy Computer is No.
+
+
+
+#### 2. Predicting room occupancy by using decision tree and random forests classification algorithms.
+
+
+a) Load the room occupancy training and testing datasets that are also used for the 1st coursework. Train a decision tree classifier and evaluate the predictive performance by reporting the classification accuracy obtained on the testing dataset.
+
+#### Solution:
+```{r}
+#library(ISLR)
+library(tree)
+training_data <- read.table("/Users/Sabrina1/Desktop/Lab DataAnalyticsUsing R/BDACourseWork1/Room_Occupancy_Training_set.txt", header = TRUE, sep =",")
+testing_data <- read.table("/Users/Sabrina1/Desktop/Lab DataAnalyticsUsing R/BDACourseWork1/Room_Occupancy_Testing_set.txt", header = TRUE, sep =",")
+
+#head(training_data)
+
+#room_occupancy.test <- testing_data$Occupancy
+training_data$Occupancy <- as.factor(training_data$Occupancy)
+
+
+testing_data$Occupancy <- as.factor(testing_data$Occupancy)
+
+
+training_data_train <- tree(Occupancy ~ Temperature+Humidity+Light+CO2+HumidityRatio, data = training_data)
+
+#summary(training_data_train)
+
+room_occupancy.tree.pred <- predict(training_data_train, newdata = testing_data, type = "class")
+#room_occupancy.tree.pred[room_occupancy.tree.pred <=0.5]<-0
+#room_occupancy.tree.pred[room_occupancy.tree.pred > 0.5]<-1
+pred <- (room_occupancy.tree.pred)
+head(pred)
+summary(pred)
+
+table_mat <- table(testing_data$Occupancy, room_occupancy.tree.pred)
+table_mat
+
+
+accuracy_Test <- sum(diag(table_mat)) / sum(table_mat)
+print(paste('Accuracy for test', accuracy_Test))
+err_rate <- 1 - accuracy_Test
+err_rate
+#accuracy = 1 - error rate = 1-0.2033333 = .7966667% of correct prediction
+```
+
+
+b) Output and analyse the tree learned by the decision tree algorithm, i.e. plot the tree structure and make a discussion about it.
+
+#### Solution:
+```{r}
+
+plot(training_data_train)
+text(training_data_train, pretty = 0)
+
+
+
+```
+Answer b) The discussion is as follows:
+
+The above tree shows an unpruned tree and the accuracy rate is .7966667%
+
+The major feature to decide classification is light. If the light value is less than 162.875 then the occupancy value is 0 regardless of values of other features.
+The second major feature is temperature. If the light value is equal to or more than 162.875 and the temperature is less than 22.2113, then the occupancy value is 1 regardless of values of other features. 
+If the light value is equal to or more than 162.875 and the temperature is equal to or more than 22.2113, then check the value of CO2. If CO2 is less than 893.125
+then the occupancy depends on the humidity -- 0 for humidity < 26.695 and 1 for humidity >= 26.695. If CO2 is equal to or more than 893.125 then the occupancy depends on the temperature -- 1 for temperature < 22.6417 and 0 for temperature >= 22.6417. 
+
+
+
+c) Train a random forests classifier and evaluate the predictive performance by reporting the classification accuracy obtained on the testing dataset. Define set.seed(1).
+
+#### Solution:
+ 
+```{r}
+library(randomForest)
+set.seed(1)
+room_occupancy_rf_train <- randomForest(Occupancy ~ Temperature+Humidity+Light+CO2+HumidityRatio, data=training_data)
+
+room_occupancy_rf_pred <- predict(room_occupancy_rf_train, testing_data, type = 'class')
+
+
+table_confusion_mat <- table(testing_data$Occupancy, room_occupancy_rf_pred)
+
+table_confusion_mat
+
+accuracy_rf_Test <- sum(diag(table_confusion_mat))/sum(table_confusion_mat)
+print(paste('Accuracy for rf test', accuracy_rf_Test))
+#Accuracy for rf test is 0.77
+
+
+```
+
+d) Output and analyse the feature importance obtained by the random forests classifier.
+
+Answer d)
+We can see from the below output that the variables light is most important predictor followed by CO2 and temperature as compared to Humidity Ratio and Humidity.
+
+
+#### Solution:
+```{r}
+importance(room_occupancy_rf_train)
+varImpPlot(room_occupancy_rf_train)
+```
+
+#### 3. Predicting wine quality by using support vector machine classification algorithm. 
+
+a) Download the full wine quality training and testing datasets from Moodle, and use the training dataset to find out the optimal value of hyperparameter C for a linear kernel-based svm.
+
+#### Solution: the optimal value of hyperparameter C is 10
+
+```{r}
+wine_qual_training_data <- read.table("/Users/Sabrina1/Desktop/DAR CW2/Full_WineQuality_Training.txt", header = TRUE, sep =",")
+wine_qual_testing_data <- read.table("/Users/Sabrina1/Desktop/DAR CW2/Full_WineQuality_Testing.txt", header = TRUE, sep =",")
+library(e1071)
+set.seed(1)
+
+wine_qual_training_data[wine_qual_training_data$quality=='Bad', 'quality'] <- 0
+wine_qual_training_data[wine_qual_training_data$quality=='Good', 'quality'] <- 1
+wine_qual_training_data$quality <- as.factor(wine_qual_training_data$quality)
+
+wine_qual_testing_data[wine_qual_testing_data$quality=='Bad', 'quality'] <- 0
+wine_qual_testing_data[wine_qual_testing_data$quality=='Good', 'quality'] <- 1
+wine_qual_testing_data$quality <- as.factor(wine_qual_testing_data$quality)
+##ckeck
+tune.out <- tune(svm, quality~., data = wine_qual_training_data, kernel="linear", 
+                 ranges = list(cost=c(0.01, 0.1, 1, 10, 100)))
+summary(tune.out)
+
+#so the optimal value of hyperparameter C is 10
+```
+
+b) Train a svm classifier by using the linear kernel and the corresponding optimal value of hyperparameter C, then make predictions on the testing dataset, report the classification accuracy.
+
+#### Solution:
+Answer b) The classification accuracy as calculated from the confusion matrix is 74.85%
+```{r}
+library(caret)
+library(e1071)
+set.seed(1)
+
+
+svmfit<- svm(quality~., data = wine_qual_training_data, kernel = "linear", cost = 10)
+summary(svmfit)
+pred <- predict(svmfit, newdata = wine_qual_testing_data)
+
+true <- wine_qual_testing_data$quality
+table(true, pred)
+
+accuracy <- sum(diag(table(true, pred))) / sum(table(true, pred))
+accuracy
+#accuracy from the confusion matrix = 246+263 / 246+263+102+69 = 509/680 = 0.7485% 
+#171% of test observation are misclassified by this svm
+```
+
+c) Use the training dataset to find out the optimal values of hyperparameters C and gamma for an RBF kernel-based svm.
+
+#### Solution: optimal values of cost C is 1 and gamma is 1
+
+```{r}
+
+library(e1071)
+set.seed(1)
+
+
+tune.out.kernel <- tune(svm, quality~., data = wine_qual_training_data, kernel="radial", 
+                 ranges = list(cost=c(0.01, 0.1, 1, 10, 100), gamma = c(0.01, 0.1, 1, 10, 100)))
+summary(tune.out.kernel)
+#optimal values of cost C is 1 and gamma is 1
+```
+
+d) Train a svm classifier by using the RBF kernel and the corresponding optimal values of hyperparameters C and gamma, then make predictions on the testing dataset, report the classification accuracy.
+
+#### Solution:
+Answer d) The classification accuracy as calculated from the confusion matrix is 84.41%
+```{r}
+library(caret)
+head(wine_qual_training_data)
+
+svmfit_rbf<- svm(quality~., data = wine_qual_training_data, kernel = "radial", cost = 1, gamma = 1)
+summary(svmfit_rbf)
+pred_rbf <- predict(svmfit_rbf, newdata = wine_qual_testing_data)
+
+true<- wine_qual_testing_data$quality
+
+table(true, pred_rbf)
+
+accuracy <- sum(diag(table(true, pred_rbf))) / sum(table(true, pred_rbf))
+
+accuracy
+#Accuracy for rbf test',+ (275+299)/(275+299+66+40) = 574/680 = 0.8441 = 84.41%
+
+```
+
+e) Train a logistic regression model. Then use the testing dataset to conduct an ROC curve analysis to compare the predictive performance of the trained logistic regression model and those two svm classifiers trained by using linear and RBF kernels respectively.
+
+#### Solution: The plot shows that predictive performance of the trained svm classifiers trained by using RBF kernels has best performance as compared to other two models.
+
+```{r}
+
+library(caret)
+library(ROCR)
+require(ISLR)
+library(e1071)
+set.seed(1)
+
+# 1) Train a Logistics Regression model
+train_lr_model<- glm(quality~., data = wine_qual_training_data, family = binomial)
+#two svm classifiers trained by using linear and RBF kernels
+svmfit<- svm(quality~., data = wine_qual_training_data, kernel = "linear", cost = 10)
+svmfit_rbf<- svm(quality~., data = wine_qual_training_data, kernel = "radial", cost = 1, gamma = 1)
+
+#make predictions
+pred_logreg <- predict(train_lr_model, newdata = wine_qual_testing_data)
+pred_linear <- predict(svmfit, newdata = wine_qual_testing_data)
+pred_rbf    <- predict(svmfit_rbf, newdata = wine_qual_testing_data)
+
+pr_trained_logreg_model <- prediction(pred_logreg, wine_qual_testing_data$quality)
+pr_trained_svmlinear_model <- prediction(as.numeric(pred_linear), wine_qual_testing_data$quality)
+pr_trained_svmrbf_model <- prediction(as.numeric(pred_rbf), wine_qual_testing_data$quality)
+
+#compare the performance
+auroc_logreg <- performance(pr_trained_logreg_model, measure = "auc")
+auroc_svmlinear <- performance(pr_trained_svmlinear_model, measure = "auc")
+auroc_svmrbf <- performance(pr_trained_svmrbf_model, measure = "auc")
+
+#calculate the Auroc values
+auroc_logreg_value1 <- auroc_logreg@y.values[[1]]
+auroc_svmlinear_value1 <- auroc_svmlinear@y.values[[1]]
+auroc_svmrbf_value1 <- auroc_svmrbf@y.values[[1]]
+
+'auroc_logreg_value1'
+auroc_logreg_value1
+'auroc_svmlinear_value1'
+auroc_svmlinear_value1
+'auroc_svmrbf_value1'
+auroc_svmrbf_value1
+
+#Calculate TPR and FPR values obtained by different models
+prf_trained_logreg_model_1 <- performance(pr_trained_logreg_model, measure = "tpr", x.measure = "fpr")
+prf_trained_svmlinear_model_2 <- performance(pr_trained_svmlinear_model, measure = "tpr", x.measure = "fpr")
+prf_trained_svmrbf_model_3 <- performance(pr_trained_svmrbf_model, measure = "tpr", x.measure = "fpr")
+
+#ROC curves for different models
+plot(prf_trained_logreg_model_1, col="blue")
+plot(prf_trained_svmlinear_model_2, col="orange", add=TRUE)
+plot(prf_trained_svmrbf_model_3, col="red", add=TRUE)
+
+
+```
+
+#### 4. Hierarchical clustering  
+
+
+(a) Using hierarchical clustering with complete linkage and Euclidean distance, cluster the states.
+
+#### Solution:
+```{r}
+library(ISLR)
+
+hc_complete <- hclust(dist(USArrests), method = "complete")
+plot(hc_complete, main="Complete linkage", xlab="States in the US")
+```
+(b) Cut the dendrogram at a height that results in three distinct clusters. Which states belong to which clusters?
+  
+#### Solution:
+```{r}
+
+ctree <- cutree(hc_complete,3)
+table(cutree(hc_complete,3))
+
+#to see which states go into each cluster
+for(k in 1:3){
+  print(k)
+  print(rownames(USArrests)[ctree == k])
+}
+```
+
+(c) Hierarchically cluster the states using complete linkage and Euclidean distance, after scaling the variables to have standard deviation one.
+
+#### Solution:
+```{r}
+hc_complete_scale <- hclust(dist(scale(USArrests)), method="complete")
+plot(hc_complete_scale, main = "complete linkage after scaling the variables", xlab = "States in the US" )
+summary(USArrests)
+
+```
+
+(d) What effect does scaling the variables have on the hierarchical clustering obtained? In your opinion, should the variables be scaled before the inter-observation dissimilarities are computed? Provide a justification for your answer.
+
+Answer d) Scaling affects how the states go to different clusters. UrbanPop has a different unit percentages from the other predictors. Thus scaling is done in this case.
+#### Solution:
+```{r}
+ctree_scale <- cutree(hc_complete_scale, 3)
+table(ctree_scale)
+
+#to see unscaled table and compare with scaled one
+table(unscaled=ctree, scaled=ctree_scale)
+
+#see which states go into each cluster
+
+for(k in 1:3)
+{
+  print(k)
+  print(rownames(USArrests)[ctree_scale == k])
+}
+```
+
+#### 5. PCA and K-Means Clustering 
+
+(a) Generate a simulated data set with 20 observations in each of three classes (i.e. 60 observations total), and 50 variables.
+
+#### Solution:
+
+```{r}
+set.seed(100)
+# k is the number of classes
+# n is the number of samples per class
+# p is the number of variables
+k = 3
+n = 20
+p = 50
+
+# generate data for class 1 i.e Class_1
+Class_1 <- matrix(rnorm(n*p), nrow = n, ncol = p)
+
+for(row in 1:n){
+  Class_1[row,] <- Class_1[row,] + rep(1,p)
+}
+
+# generate data for class 2
+Class_2 <- matrix(rnorm(n*p), nrow = n, ncol = p)
+
+for(row in 1:n){
+  Class_2[row,] <- Class_2[row,] + rep(-1,p)
+}
+
+# generate data for class 3
+Class_3 <- matrix(rnorm(n*p), nrow = n, ncol = p)
+for(row in 1:n){
+  Class_3[row,] <- Class_3[row,] + c(rep(+1, p/2), rep(-1, p/2))
+}
+
+Class = rbind(Class_1, Class_2, Class_3)
+labels = c(rep(1,n), rep(2,n), rep(3,n))
+
+```
+
+(b) Perform PCA on the 60 observations and plot the first two principal components’ eigenvector. Use a different color to indicate the observations in each of the three classes. If the three classes appear separated in this plot, then continue on to part (c). If not, then return to part (a) and modify the simulation so that there is greater separation between the three classes. Do not continue to part (c) until the three classes show at least some separation in the first two principal component eigenvectors.
+
+#### Solution:
+```{r}
+pr_comp = prcomp(Class, scale. = FALSE)
+plot(pr_comp$x[,1], pr_comp$x[,2], col = labels, xlab = "X", ylab = "Y", pch = 19)
+```
+
+(c) Perform K-means clustering of the observations with K = 3. How well do the clusters that you obtained in K-means clustering compare to the true class labels?
+
+Answer c) The three classes were perfectly clustered in their true class labels. 
+#### Solution:
+```{r}
+K_means_3 = kmeans(Class, 3, nstart = 100)
+table(clustered_class_labels = K_means_3$cluster, true_class_labels = labels)
+#The three classes were perfectly clustered in their true class labels
+```
+
+(d) Perform K-means clustering with K = 2. Describe your results.
+
+Answer d) The results show that two of the classes were merged to form a new cluster
+#### Solution:
+```{r}
+K_means_2 = kmeans(Class, 2, nstart = 100)
+table(clustered_class_labels = K_means_2$cluster, true_class_labels = labels)
+#Two of the classes were merged to form a new cluster.
+```
+
+(e) Now perform K-means clustering with K = 4, and describe your results.
+
+Answer e) The results show that one of the clusters has been split into two clusters.
+#### Solution:
+```{r}
+K_means_4 = kmeans(Class, 4, nstart = 100)
+table(clustered_class_labels = K_means_4$cluster, true_class_labels = labels)
+# It shows that one of the clusters has been split into two clusters
+```
+
+(f) Now perform K-means clustering with K = 3 on the first two principal components, rather than on the raw data. That is, perform K-means clustering on the 60 $\times$ 2 matrix of which the first column is the first principal component’s corresponding eigenvector, and the second column is the second principal component’s corresponding eigenvector. Comment on the results.
+
+Answer f) The results show that all the three classes have been perfectly clustered.
+#### Solution:
+```{r}
+K_means_pr_3 = kmeans(pr_comp$x[, 1:2], 3, nstart = 100)
+table(clustered_class_labels = K_means_pr_3$cluster, true_class_labels = labels)
+# it shows that all the 3 classes have been perfectly clustered.
+```
+
+(g) Using the scale() function, perform K-means clustering with K = 3 on the data after scaling each variable to have standard deviation one. How do these results compare to the true class labels? Will the scaling affect the clustering?
+
+Answer g) The results are the same if compared to the true class labels. Hence scaling does not affect clustering.
+#### Solution:
+```{r}
+K_means_scale_3 = kmeans(scale(Class), 3, nstart = 100)
+table(clustered_class_labels = K_means_scale_3$cluster, true_class_labels = labels)
+#It shows the same result. Hence scaling does not affect the clustering
+```
+
