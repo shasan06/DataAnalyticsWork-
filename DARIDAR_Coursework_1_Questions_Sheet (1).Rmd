@@ -1,0 +1,356 @@
+---
+title: "MSc_CW1_13150880_Sabrina_Hasan.pdf"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+install.packages
+
+
+
+
+
+
+
+
+
+
+
+
+
+("knitr")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#### 1. Statistical learning methods \hfill ($12\%\mid 12\%$)
+
+\smallskip
+
+For each of parts (a) through (d), indicate whether we would generally expect the performance of a flexible statistical learning method to be better or worse than an inflexible method. Justify your answer. 
+
+(a) The number of predictors $p$ is extremely large, and the number
+of observations $n$ is small.
+
+The performance of a flexible statistical learning method to be worse than an inflexible method.
+This is because the flexible method will more likely overfit the training data n due to the risk of the flexible model overreacting to any noise or random error which is present more in the small data. Thus a much larger n is needed if p is extremely large so that the model is then able to fit in the data.
+
+(b) The sample size $n$ is extremely large, and the number of predictors $p$ is small.
+
+The performance of a flexible statistical learning method to be better than an inflexible method.
+As the sample size n is extremely large means more data points in n and the problem of overfitting is reduced. Also an extremely large n means it has low bias and would represent the real world problem much better.
+
+(c) The relationship between the predictors and response is highly
+non-linear.
+
+The performance of a flexible statistical learning method to be better than an inflexible method.
+This is due to the bias for the flexible model being much lower because the flexible method would be the much better for the real world non linear model.
+
+
+(d) The standard deviation of the error terms, i.e. $\sigma = \textrm{sd}(\varepsilon)$, is extremely
+high.
+
+The performance of a flexible statistical learning method to be worse than an inflexible method.
+As the extremely high standard deviation of the error terms means the existence of more noise or random error in the data which can cause the problem of overfitting due to the presence of more noise in the data.
+
+#### 2. Bayes' rule \hfill ($12\%\mid 12\%$)
+
+\smallskip
+
+Given a dataset including 20 observations (S_1, ..., S_20) about the temperature (i.e. hot or cool) for playing golf (i.e. yes or no), you are required to use the Bayes' rule to calculate by hand the probability of playing golf according to the temperature, i.e. P(Play Golf | Temperature).
+
+
+|       | S_1 | S_2 | S_3 | S_4 | S_5 | S_6 | S_7 | S_8 | S_9 | S_10 |
+|-------|------|---------|--------|--------|--------|--------|--------|--------|--------|--------|
+|   Temperature |  cool  |    hot   |    hot  | hot  |cool  | cool  |hot  |cool  |hot  |hot  |
+|   Play Golf  |  yes |   no   |  yes  | no  | yes  | yes  | no  |yes  |no  |yes  |
+
+|       | S_11 | S_12 | S_13 | S_14 | S_15 | S_16 | S_17 | S_18 | S_19 | S_20 |
+|-------|------|---------|--------|--------|--------|--------|--------|--------|--------|--------|
+|   Temperature |  hot  |    hot   |    hot  | cool  |hot  | hot  |cool  |cool  |cool  |hot  |
+|   Play Golf  |  no |   no   |  yes  | no  | no  | no  | yes | no  |no  |no  |
+
+\newpage
+
+P(Play Golf = yes) = 8/20 = 0.4
+
+P(Play Golf = no) = 12/20 = 0.6
+
+P(Temperature = cool) = 8/20 = 0.4
+
+P(Temperature = hot) = 12/20 = 0.6
+
+P(Temperature = cool | Play Golf = no) = 3/12 = 0.25
+
+P(Temperature = hot | Play Golf = no) = 9/12 = 0.75
+
+
+Calculation:
+
+
+a) 
+P(Play Golf = yes| Temperature = cool)
+
+= P(Temperature = cool | Play Golf = yes) * P(Play Golf = yes) / P(Temperature = cool)
+
+= (5/8 * 0.4) / 0.4 = 0.625
+
+b) 
+P(Play Golf = yes| Temperature = hot)
+
+= P(Temperature = hot | Play Golf = yes) * P(Play Golf = yes) / P(Temperature = hot)
+
+= (3/8 * 0.4) / 0.6 = 0.25
+
+c) 
+P(Play Golf = no| Temperature = cool)
+
+= P(Temperature = cool | Play Golf = no) * P(Play Golf = no) / P(Temperature = cool)
+
+= (0.25 * 0.6) / 0.4 = 0.375
+
+d) 
+P(Play Golf = no| Temperature = hot)
+
+= P(Temperature = hot | Play Golf = no) * P(Play Golf = no) / P(Temperature = hot)
+
+= (0.75 * 0.6) / 0.6 = 0.75
+
+
+#### 3. Descriptive analysis \hfill ($22\%\mid 22\%$)
+
+\smallskip
+
+This question involves the ```Auto``` dataset included in the "ISLR" package.  
+
+(a) Which of the predictors are quantitative, and which are qualitative?
+
+```{r}
+#install.packages("ISLR")
+library("ISLR")
+summary(Auto)
+
+```
+Ans a) The following predictors are "quantitative":
+mpg - which is a ratio measurement
+cylinders - which is a ratio measurement
+displacement - which is a ratio measurement
+horsepower - which is a ratio measurement
+weight  - which is a ratio measurement
+acceleration - which is a ratio measurement
+
+The following predictors are "qualitative":
+year -  which is a numerical ordinal measurement
+origin -  which is a numerical ordinal measurement
+name -  which is a non-numerical nominal measurement
+
+
+
+(b) What is the range of each quantitative predictor? You can answer this using the ```range()``` function.
+
+Ans b) 
+The range for mpg is `r range(Auto$mpg)[2] - range(Auto$mpg)[1]`
+The range for cylinders is `r range(Auto$cylinders)[2] - range(Auto$cylinders)[1]`
+The range for displacement is `r range(Auto$displacement)[2] - range(Auto$displacement)[1]`
+The range for horsepower is `r range(Auto$horsepower)[2] - range(Auto$horsepower)[1]`
+The range for weight is `r range(Auto$weight)[2] - range(Auto$weight)[1]`
+The range for acceleration is `r range(Auto$acceleration)[2] - range(Auto$acceleration)[1]`
+
+
+(c) What is the median and variance of each quantitative
+predictor?
+
+Ans c)
+The median for mpg is `r round(median(Auto$mpg), digits = 2)`, and the variance is `r round(var(Auto$mpg), digits = 2)`
+
+The median for cylinders is `r round(median(Auto$cylinders), digits = 2)`, and the variance is `r round(var(Auto$cylinders), digits = 2)`
+
+The median for displacement is `r round(median(Auto$displacement), digits = 2)`, and the variance is `r round(var (Auto$displacement), digits = 2)`
+
+The median for horsepower is `r round(median(Auto$horsepower), digits = 2)`, and the variance is `r round(var(Auto$horsepower), digits = 2)`
+
+The median for weight is `r round(median(Auto$weight), digits = 2)`, and the variance is `r round(var(Auto$weight), digits = 2)`
+
+The median for acceleration is `r round(median(Auto$acceleration), digits = 2)` and the variance is `r round(var(Auto$acceleration), digits = 2)`
+
+
+(d) Now remove the 11th through 79th observations (inclusive) in the dataset. What is the
+range, median, and variance of each predictor in the
+subset of the data that remains?
+```{r}
+auto_remove <- Auto[-c(11:79), ]
+```
+
+Ans d)
+#Range
+The range for mpg is `r range(auto_remove$mpg)[2] - range(auto_remove$mpg)[1]`
+The range for cylinders is `r range(auto_remove$cylinders)[2] - range(auto_remove$cylinders)[1]`
+The range for displacement is `r range(auto_remove$displacement)[2] - range(auto_remove$displacement)[1]`
+The range for horsepower is `r range(auto_remove$horsepower)[2] - range(auto_remove$horsepower)[1]`
+The range for weight is `r range(auto_remove$weight)[2] - range(auto_remove$weight)[1]`
+The range for acceleration is `r range(auto_remove$acceleration)[2] - range(auto_remove$acceleration)[1]`
+
+#Median and Variance
+The median for mpg is `r round(median(auto_remove$mpg), digits = 2)`, and the variance is `r round(var(auto_remove$mpg), digits = 2)`
+The median for cylinders is `r round(median(auto_remove$cylinders), digits = 2)`,and the variance is `r round(var(auto_remove$cylinders), digits = 2)`
+The median for displacement is `r round(median(auto_remove$displacement), digits = 2)`,and the variance is `r round(var(auto_remove$displacement), digits = 2)`
+The median for horsepower is `r round(median(auto_remove$horsepower), digits = 2)`,and the variance is `r round(var(auto_remove$horsepower), digits = 2)`
+The median for weight is `r round(median(auto_remove$weight), digits = 2)`, and the variance is `r round(var(auto_remove$weight), digits = 2)`
+The median for acceleration is `r round (median(auto_remove$acceleration), digits = 2)`
+and the variance is now `r round(var(auto_remove$acceleration), digits = 2)`
+
+
+(e) Using the full data set, investigate the relationship between individual predictors with the target response gas mileage (```mpg```) graphically. Comment on your findings.
+
+(f) Suppose that we wish to predict ```mpg``` on the basis
+of the other variables. Do your plots suggest that any of the
+other variables might be useful in predicting ```mpg```? Justify your answer.
+
+#### 4. Linear regression \hfill ($24\%\mid 24\%$)
+
+\smallskip
+
+This question involves the use of simple linear regression on the ```Auto``` dataset.
+
+(a) Use the ```lm()``` function to perform a simple linear regression with
+`mpg` as the response and `acceleration` as the predictor. Use the
+```summary()``` function to print the results. Comment on the output. For example:
+
+```{r}
+lm.fit <- lm(mpg ~ acceleration, data = Auto)
+summary(lm.fit)
+```
+i. Is there a relationship between the predictor and the response?
+
+The relationship  is 4.8332 + (1.1976 * acceleration) = mpg. This means that on average, an extra acceleration will result in a increase of 'mpg' by 1.1976 over the sample range of acceleration.
+
+ii. How strong is the relationship between the predictor and
+the response?
+
+The t-value between 'mpg' and 'acceleration' is 9.228 which is low. The p value is low and is below the standard cut-of rate of 5%-----------------------------
+
+iii. Is the relationship between the predictor and the response
+positive or negative?
+
+The relationship is positive result as stated above. On average an extra acceleration will result in increasing of mpg by 1.1976.
+
+iv. What is the predicted ```mpg``` associated with an ```acceleration``` of
+14.50? What are the associated 97% confidence and prediction
+intervals?
+--------------------------------not sure why horsepower
+```{r}
+predict(lm.fit, data.frame(horsepower = (c(97))), interval = "confidence")
+predict(lm.fit, data.frame(horsepower= (c(97))), interval = "prediction")
+```
+
+(b) Plot the response and the predictor. Use the ```abline()``` function
+to display the least squares regression line.
+
+```{r}
+plot(mpg ~ acceleration , data = Auto, ylim = c(-10,50), xlab = "acc", ylab = "mpg", main = "Relationship between mpg and acceleration")abline(lm.fit)
+```
+
+(c) Plot the 97% confidence interval and prediction interval in the same plot as (b) using different colours and legends. 
+
+
+
+
+
+#### 5. Logistic regression and cross validation \hfill ($30\%\mid 30\%$)
+
+
+\smallskip
+
+A recent study has shown that the accurate prediction of the office room occupancy leads to potential energy savings of 30%. In this question, you are required to build logistic regression models by using different environmental measurements as predictors (features), such as temperature, humidity, light, CO$_2$ and humidity ratio, to predict the office room occupancy. The provided training dataset consists of 2,000 observations, whilst the testing dataset consists of 300 observations.
+
+(a) Load the training and testing datasets from corresponding files, and display the statistics about different predictors in the training dataset.
+```{r}
+training_data <- read.table("/twu/friend/Sabrina/20201126_BDA_CW/Room_Occupancy_Training_set.txt", header = TRUE, sep =",")
+summary(training_data)
+
+testing_data <- read.table("/twu/friend/Sabrina/20201126_BDA_CW/Room_Occupancy_Testing_set.txt", header = TRUE, sep =",")
+summary(testing_data)
+```
+
+(b) Conduct a 10-fold cross validation to evaluate the predictive accuracy of a logistic regression model that uses Temperature as the only predictor. Report the average accuracy and AUROC value obtained over the 10-fold cross validation. Set the value of random seed as "100" when generating fold indices. Consider the predictive label equals to 1, if the predictive probability is greater than 0.5.
+
+```{r}
+#install.packages("caret")
+#library(caret)
+set.seed(100)
+folds <- createFolds(y=training_data[,6],k=10)
+error_rate_value<-as.numeric()
+for(i in 1:10){
+  fold_cv_test <- training_data[folds[[i]],]
+  #print(dim(fold_cv_test))
+  fold_cv_train <- training_data[-folds[[i]],]
+  #print(dim(fold_cv_train))
+  glm.fit <- glm(Occupancy ~ Temperature, data = fold_cv_train, family = binomial)
+  pred_prob <- predict(glm.fit, fold_cv_test, type='response')
+  glm.pred <- rep(1, dim(fold_cv_test)[1])
+  glm.pred[pred_prob<0.5]<-0
+  error_rate_fold<-mean(glm.pred!=fold_cv_test[,1])
+  error_rate_value<-append(error_rate_value, error_rate_fold)
+  average <- mean(error_rate_value)
+}
+
+```
+
+(c) Conduct a 10-fold cross validation to evaluate the predictive accuracy of a logistic regression model that uses HumidityRatio as the only predictor. Report the average accuracy and AUROC value obtained over the 10-fold cross validation. Set the value of random seed as "100" when generating fold indices. Consider the predictive label equals to 1, if the predictive probability is greater than 0.5.
+
+```{r}
+#install.packages("caret")
+#library(caret)
+set.seed(100)
+folds <- createFolds(y=training_data[,6],k=10)
+error_rate_value<-as.numeric()
+for(i in 1:10){
+  set.seed(100)
+  fold_cv_test <- training_data[folds[[i]],]
+  #print(dim(fold_cv_test))
+  fold_cv_train <- training_data[-folds[[i]],]
+  #print(dim(fold_cv_train))
+  glm.fit <- glm(Occupancy ~ HumidityRatio, data = fold_cv_train, family = binomial)
+  pred_prob <- predict(glm.fit, fold_cv_test, type='response')
+  glm.pred <- rep("1", dim(fold_cv_test)[1])
+  glm.pred[pred_prob<0.5]<-"0"
+  error_rate_fold<-mean(glm.pred!=fold_cv_test[,1])
+  error_rate_value<-append(error_rate_value, error_rate_fold)
+  average <- mean(error_rate_value)
+}
+```
+
+(d) Conduct a 10-fold cross validation to evaluate the predictive accuracy of a logistic regression model that uses Temperature and HumidityRatio in the training dataset. Report the average accuracy and AUROC value obtained over the 10-fold cross validation. Set the value of random seed as "100" when generating fold indices. Consider the predictive label equals to 1, if the predictive probability is greater than 0.5.
+```{r}
+#install.packages("caret")
+#library(caret)
+set.seed(100)
+folds <- createFolds(y=training_data[,6],k=10)
+error_rate_value<-as.numeric()
+for(i in 1:10){
+  set.seed(100)
+  fold_cv_test <- training_data[folds[[i]],]
+  #print(dim(fold_cv_test))
+  fold_cv_train <- training_data[-folds[[i]],]
+  #print(dim(fold_cv_train))
+  glm.fit <- glm(Temperature ~ HumidityRatio, data = fold_cv_train, family = binomial)
+  pred_prob <- predict(glm.fit, fold_cv_test, type='response')
+  glm.pred <- rep("1", dim(fold_cv_test)[1])
+  glm.pred[ pred_prob<0.5]<-"0"
+  error_rate_fold<-mean(glm.pred!=fold_cv_test[,1])
+  error_rate_value<-append(error_rate_value, error_rate_fold)
+  average <- mean(error_rate_value)
+}
+```
+
+(e) Compare the performance of those three different models on predicting the testing dataset. Draw ROC curves for all individual models and calculating the corresponding AUROC values. Discuss the comparison results obtained by the 10-fold cross validation and the hold-out testing.
+
+```{r}
+testing_data <- read.table("/Users/Sabrina1/Desktop/Lab DataAnalyticsUsing R/BDACourseWork1/Room_Occupancy_Testing_set.txt", header = TRUE, sep =",")
+
+dim(testing_data)
+```
+
